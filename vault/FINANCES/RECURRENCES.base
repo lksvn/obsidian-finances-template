@@ -1,0 +1,64 @@
+filters:
+  and:
+    - file.inFolder("FINANCES/RECURRENCES")
+formulas:
+  recurrence_rule: link(file.path, name)
+  amount_rule: if(amount_type == "variable", "🔄 Latest transaction", if(expected_amount, "$ " + expected_amount.toFixed(2), ""))
+properties:
+  formula.recurrence_rule:
+    displayName: Recurrence
+  formula.amount_rule:
+    displayName: Amount rule
+  person:
+    displayName: Person
+  frequency:
+    displayName: Frequency
+  amount_type:
+    displayName: Amount type
+  due_day:
+    displayName: Day
+  accounting:
+    displayName: Accounting
+views:
+  - type: table
+    name: Generated monthly
+    filters:
+      and:
+        - type == "financial_recurrence"
+        - status == "active"
+        - generate_transaction == true
+    order:
+      - formula.recurrence_rule
+      - person
+      - frequency
+      - formula.amount_rule
+      - amount_type
+      - due_day
+      - installments_total
+  - type: table
+    name: Included in a bill
+    filters:
+      and:
+        - type == "financial_recurrence"
+        - status == "active"
+        - accounting == "included_in_bill"
+    order:
+      - formula.recurrence_rule
+      - person
+      - frequency
+      - formula.amount_rule
+      - platform
+      - card
+  - type: table
+    name: All active
+    filters:
+      and:
+        - type == "financial_recurrence"
+        - status == "active"
+    order:
+      - formula.recurrence_rule
+      - person
+      - frequency
+      - formula.amount_rule
+      - accounting
+      - generate_transaction

@@ -1,0 +1,199 @@
+filters:
+  and:
+    - file.inFolder("FINANCES/TRANSACTIONS")
+formulas:
+  transaction: link(file.path, description)
+  amount_currency: if(amount, "$ " + amount.toFixed(2), "")
+  category_name: list(category).map(value.asFile().basename).join(", ")
+  person_name: list(person).map(value.asFile().basename).join(", ")
+  days_until_due: if(due_date, (due_date - today()).days.round(), null)
+  status_visual: if(status == "pending", "🟡 Pending", if(status == "completed", "🟢 Completed", if(status == "cancelled", "⚫ Cancelled", "⚪ " + status)))
+  movement_visual: if(movement == "pay", "💸 Outflow", if(movement == "receive", "💰 Inflow", "⚪ " + movement))
+properties:
+  formula.transaction:
+    displayName: Transaction
+  formula.amount_currency:
+    displayName: Amount
+  formula.category_name:
+    displayName: Category
+  formula.person_name:
+    displayName: Person
+  formula.days_until_due:
+    displayName: Days
+  formula.status_visual:
+    displayName: Status
+  formula.movement_visual:
+    displayName: Movement
+  period:
+    displayName: Period
+  due_date:
+    displayName: Due date
+  installment:
+    displayName: Installment
+  installments_total:
+    displayName: Total installments
+  recurrence:
+    displayName: Recurrence
+views:
+  - type: table
+    name: Current month
+    filters:
+      and:
+        - period == today().format("YYYY-MM")
+    order:
+      - formula.transaction
+      - person
+      - formula.movement_visual
+      - formula.amount_currency
+      - due_date
+      - formula.status_visual
+      - category
+    sort:
+      - property: movement
+        direction: DESC
+      - property: due_date
+        direction: ASC
+  - type: table
+    name: Pending
+    filters:
+      and:
+        - status == "pending"
+    order:
+      - formula.transaction
+      - person
+      - formula.movement_visual
+      - formula.amount_currency
+      - due_date
+      - category
+    sort:
+      - property: due_date
+        direction: ASC
+  - type: table
+    name: To pay
+    filters:
+      and:
+        - movement == "pay"
+        - status == "pending"
+    order:
+      - formula.transaction
+      - person
+      - formula.amount_currency
+      - due_date
+      - category
+  - type: table
+    name: To receive
+    filters:
+      and:
+        - movement == "receive"
+        - status == "pending"
+    order:
+      - formula.transaction
+      - person
+      - counterparty
+      - formula.amount_currency
+      - due_date
+  - type: table
+    name: All
+    order:
+      - formula.transaction
+      - person
+      - formula.movement_visual
+      - period
+      - formula.amount_currency
+      - due_date
+      - formula.status_visual
+      - category
+    sort:
+      - property: period
+        direction: DESC
+  - type: table
+    name: Completed
+    filters:
+      and:
+        - status == "completed"
+    order:
+      - formula.transaction
+      - person
+      - formula.movement_visual
+      - period
+      - formula.amount_currency
+      - due_date
+      - category
+  - type: table
+    name: Cancelled
+    filters:
+      and:
+        - status == "cancelled"
+    order:
+      - formula.transaction
+      - person
+      - period
+      - formula.amount_currency
+      - due_date
+      - category
+  - type: table
+    name: Installments
+    filters:
+      and:
+        - installment != null
+    order:
+      - formula.transaction
+      - person
+      - period
+      - formula.amount_currency
+      - installment
+      - installments_total
+      - formula.status_visual
+      - category
+  - type: table
+    name: Recurring transactions
+    filters:
+      and:
+        - recurrence != null
+    order:
+      - formula.transaction
+      - recurrence
+      - person
+      - period
+      - formula.amount_currency
+      - due_date
+      - formula.status_visual
+  - type: chart
+    name: Expenses by category
+    filters:
+      and:
+        - period == today().format("YYYY-MM")
+        - movement == "pay"
+        - status != "cancelled"
+    order:
+      - amount
+    chartType: bar
+    xAxis: formula.category_name
+    aggregation: sum
+    seriesBy: formula.person_name
+    showLegend: true
+    legendPosition: bottom-center
+    colors:
+      - "#E879A9"
+      - "#4C8BF5"
+  - type: chart
+    name: Monthly expenses
+    filters:
+      and:
+        - movement == "pay"
+        - status != "cancelled"
+    order:
+      - amount
+    sort:
+      - property: period
+        direction: ASC
+    chartType: line
+    xAxis: period
+    aggregation: sum
+    seriesBy: formula.person_name
+    showLegend: true
+    legendPosition: bottom-center
+    showPoints: true
+    colors:
+      - "#E879A9"
+      - "#4C8BF5"
