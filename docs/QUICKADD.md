@@ -14,6 +14,12 @@ Configure QuickAdd through its interface so this template never replaces an exis
 
 Repeat the process using the name `Generate financial month` and script `FINANCES/SCRIPTS/generate-financial-month.js`.
 
+## New financial recurrence
+
+Repeat the process using the name `New financial recurrence` and script `FINANCES/SCRIPTS/new-financial-recurrence.js`.
+
+The assistant creates either an individual recurring transaction or a charge documented as already included in a card bill. It also supports monthly or yearly frequency, fixed or variable amounts, and optional installments.
+
 ## Synchronization
 
 The scripts live inside the vault and can be synchronized normally. QuickAdd stores its choices in `.obsidian/plugins/quickadd/data.json`; synchronize that folder only if you want identical choices on every device.

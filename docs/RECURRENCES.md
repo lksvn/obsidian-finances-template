@@ -1,6 +1,6 @@
 # Recurrence rules
 
-Create a note in `FINANCES/RECURRENCES` by copying [`FINANCES/TEMPLATES/Recurrence.md`](../vault/FINANCES/TEMPLATES/Recurrence.md).
+Use **QuickAdd: New financial recurrence**. Alternatively, copy [`FINANCES/TEMPLATES/Recurrence.md`](../vault/FINANCES/TEMPLATES/Recurrence.md) and edit it manually.
 
 ## Essential properties
 
@@ -11,6 +11,7 @@ Create a note in `FINANCES/RECURRENCES` by copying [`FINANCES/TEMPLATES/Recurren
 - `expected_amount`: fixed amount or initial fallback
 - `due_day`
 - `person`, `category`, and `start`
+- `payment_method` is optional
 
 ## Charges included in a card bill
 

@@ -35,7 +35,7 @@ All screenshots use fictitious people and values.
 1. Read [docs/SETUP.md](docs/SETUP.md).
 2. Copy the contents of `vault/` into a new or existing vault.
 3. Create your people notes in `FINANCES/PEOPLE`.
-4. Configure the two QuickAdd actions described in [docs/QUICKADD.md](docs/QUICKADD.md).
+4. Configure the three QuickAdd actions described in [docs/QUICKADD.md](docs/QUICKADD.md).
 5. Open `FINANCES/DASHBOARD.md`.
 
 ## Documentation
